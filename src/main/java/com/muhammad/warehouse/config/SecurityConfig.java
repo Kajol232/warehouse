@@ -76,7 +76,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/users/changePassword/",
             "/order/reportFromDate/{date}",
             "/orders/lists",
-            "/stock/add",
+            "/stocks/add",
+            "/stocks/**",
+            "/users/**",
+            "/orders/**"
     };
 
     private static final String[] ADMIN_WHITELIST = {
