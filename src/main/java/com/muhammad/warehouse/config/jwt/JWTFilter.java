@@ -1,6 +1,7 @@
 package com.muhammad.warehouse.config.jwt;
 
-import com.muhammad.personal.intern.service.interfaces.IUserService;
+
+import com.muhammad.warehouse.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,7 +23,7 @@ public class JWTFilter extends OncePerRequestFilter {
     @Autowired
     private JWTProvider jwtProvider;
     @Autowired
-    IUserService userService;
+    UserServiceImpl userService;
 
     public String getTokenFromRequest(HttpServletRequest request){
         String bearer = request.getHeader(AUTHORIZATION);
