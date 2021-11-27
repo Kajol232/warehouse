@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.muhammad.warehouse.model.Role.ROLE_ADMIN;
@@ -78,12 +77,12 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 
     @Override
     public List<User> getUsers() {
-        return null;
+        return (List<User>) userRepository.findAll();
     }
 
     @Override
     public User findUserByEmail(String email) {
-        return null;
+        return userRepository.findUserByEmail(email);
     }
 
     @Override
@@ -93,6 +92,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 
     @Override
     public void deleteUser(long id) {
+        //userRepository.delete();
 
     }
 

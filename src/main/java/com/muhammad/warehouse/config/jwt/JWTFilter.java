@@ -20,9 +20,9 @@ import static org.springframework.util.StringUtils.hasText;
 @Component
 public class JWTFilter extends OncePerRequestFilter {
     public static final String AUTHORIZATION = "Authorization";
-    @Autowired
+
     private JWTProvider jwtProvider;
-    @Autowired
+
     UserServiceImpl userService;
 
     public String getTokenFromRequest(HttpServletRequest request){
