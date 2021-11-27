@@ -1,12 +1,8 @@
 package com.muhammad.warehouse.controller;
 
 import com.muhammad.warehouse.config.jwt.JWTProvider;
-import com.muhammad.warehouse.exception.domain.EmailExistException;
-import com.muhammad.warehouse.exception.domain.InvalidLoginException;
-import com.muhammad.warehouse.exception.domain.UserNotFoundException;
-import com.muhammad.warehouse.exception.domain.UsernameExistException;
-import com.muhammad.warehouse.model.DTO.RegisterUserDTO;
-import com.muhammad.warehouse.model.DTO.UserLoginDTO;
+import com.muhammad.warehouse.exception.domain.*;
+import com.muhammad.warehouse.model.DTO.*;
 import com.muhammad.warehouse.model.User;
 import com.muhammad.warehouse.model.UserPrincipal;
 import com.muhammad.warehouse.repository.UserRepository;
@@ -23,9 +19,9 @@ import static com.muhammad.warehouse.config.constant.SecurityConstant.JWT_TOKEN_
 @RestController
 @RequestMapping(value = "/users")
 public class UserController {
-    private JWTProvider provider;
-    private UserRepository userRepository;
-    private IUserService userService;
+    private final JWTProvider provider;
+    private final UserRepository userRepository;
+    private final IUserService userService;
 
 
     public UserController(JWTProvider provider, UserRepository repository, IUserService userService) {
@@ -36,10 +32,10 @@ public class UserController {
 
     @GetMapping(path = "/lists", consumes = "application/json", produces = "application/json")
     public List<User> getAllUsers(){
-        return (List<User>) userRepository.findAll();
+        return (List<User>) userService.getUsers();
     }
 
-    @GetMapping(path = "/getUserById/{id}", consumes = "application/json", produces = "application/json")
+    @GetMapping(path = "/getById/{id}", consumes = "application/json", produces = "application/json")
     public User getUserById(@PathVariable("id") long id){
         return userRepository.findById(id).get();
     }
@@ -50,15 +46,30 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    @PatchMapping(path = "/update/{id}", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<User> updateUser(@PathVariable("id") long id, @RequestBody UpdateUserDTO userDTO) throws UserNotFoundException, UsernameExistException, EmailExistException {
+        User user = userService.updateUser(id, userDTO);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+    @PatchMapping(path = "/changePassword", consumes = "application/json", produces = "application/json")
+    public ResponseEntity changePassword(@RequestBody ChangePasswordDTO changePasswordDTO) throws EmailNotFoundException, InvalidLoginException {
+        userService.changePassword(changePasswordDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @PatchMapping(path = "/resetPassword", consumes = "application/json", produces = "application/json")
+    public ResponseEntity resetPassword(@RequestBody ResetPasswordDTO resetPasswordDTO) throws EmailNotFoundException, InvalidLoginException {
+        userService.resetPassword(resetPasswordDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @DeleteMapping(path = "/delete/{id}")
     public ResponseEntity deleteUser(@PathVariable("id") long id){
         userService.deleteUser(id);
-
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping(value = "/login", consumes = "application/json", produces = "application/json")
-    ResponseEntity<Object> userLogin(@RequestBody UserLoginDTO loginDTO){
+    ResponseEntity<User> userLogin(@RequestBody UserLoginDTO loginDTO){
        User user = userService.findUserByEmail(loginDTO.getEmail());
         UserPrincipal userPrincipal = new UserPrincipal(user);
         HttpHeaders headers = getJwtHeader(userPrincipal);

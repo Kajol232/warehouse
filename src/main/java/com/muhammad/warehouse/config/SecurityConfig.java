@@ -38,7 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .cors().and()
-                .exceptionHandling().authenticationEntryPoint(entryPoint)
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
                 .antMatchers(AUTH_WHITELIST).permitAll()
@@ -46,8 +46,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(WORKER_USER_WHITELIST).hasRole("WORKER_USER")
                 .anyRequest().authenticated()
                 .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
+                .exceptionHandling().authenticationEntryPoint(entryPoint)
+                .and()
+                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
+
     }
 
 
@@ -71,14 +73,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-ui/**",
             // other public endpoints of your API may be appended to this array
             "/user/login",
-            "/user/resetPassword/**"
+            "/user/changePassword/"
     };
 
     private static final String[] ADMIN_WHITELIST = {
-            "/user/delete"
+            "/user/**"
 
     };
     private static final String[]  WORKER_USER_WHITELIST = {
+
 
 
     };
