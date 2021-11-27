@@ -72,15 +72,32 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/v3/api-docs/**",
             "/swagger-ui/**",
             // other public endpoints of your API may be appended to this array
-            "/user/login",
-            "/user/changePassword/"
+            "/users/login",
+            "/users/changePassword/",
+            "/order/reportFromDate/{date}",
+            "/orders/lists",
+            "/stock/add",
     };
 
     private static final String[] ADMIN_WHITELIST = {
-            "/user/**"
+            "/user/lists",
+            "/user/getById/{id}",
+            "/user/register",
+            "/user/update/{id}",
+            "/user/resetPassword",
+            "/user/delete/{id}",
+            "/stock/lists",
+            "/stock/restock/{id}",
+            "/stocks/delete/{id}",
+            "/orders/getById/{id}",
+            "/orders/log",
 
     };
     private static final String[]  WORKER_USER_WHITELIST = {
+            "/stock/lists",
+            "/stock/getById/{id}",
+            "/orders/log",
+            "/orders/getAllOrdersFromDate"
 
 
 

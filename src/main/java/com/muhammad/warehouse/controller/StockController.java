@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/stocks")
+@RequestMapping(value = "/stock")
 public class StockController {
     private final StockRepository stockRepository;
     private final IStockService stockService;
@@ -26,12 +26,12 @@ public class StockController {
     }
 
     @GetMapping(path = "/lists", consumes = "application/json", produces = "application/json")
-    public List<Stock> getAllUsers(){
+    public List<Stock> getAllStocks(){
         return (List<Stock>) stockService.getStocks();
     }
 
     @GetMapping(path = "/getById/{id}", consumes = "application/json", produces = "application/json")
-    public Stock getUserById(@PathVariable("id") long id){
+    public Stock getStockById(@PathVariable("id") long id){
         return stockRepository.findById(id);
     }
 
@@ -42,7 +42,7 @@ public class StockController {
     }
 
     @PostMapping(value = "/add", consumes = "application/json", produces = "application/json")
-    ResponseEntity<Stock> userLogin(@RequestBody StockDTO stockDTO) throws StockExistException {
+    ResponseEntity<Stock> addStock(@RequestBody StockDTO stockDTO) throws StockExistException {
         Stock stock = stockService.addStock(stockDTO);
         return new ResponseEntity<>(stock, HttpStatus.OK);
     }
